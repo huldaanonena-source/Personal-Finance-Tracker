@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const { protect } = require('../middleware/auth');
 const {
   getTransactions,
   createTransaction,
@@ -7,18 +8,13 @@ const {
   deleteTransaction,
   getSummary
 } = require('../controllers/transactionController');
-const { protect } = require('../middleware/auth');
 
 router.use(protect);
 
-router.route('/')
-  .get(getTransactions)
-  .post(createTransaction);
-
+router.get('/', getTransactions);
+router.post('/', createTransaction);
+router.put('/:id', updateTransaction);
+router.delete('/:id', deleteTransaction);
 router.get('/summary', getSummary);
-
-router.route('/:id')
-  .put(updateTransaction)
-  .delete(deleteTransaction);
 
 module.exports = router;
