@@ -5,22 +5,19 @@ const {
   createTransaction,
   updateTransaction,
   deleteTransaction,
-  getSummary,
+  getSummary
 } = require('../controllers/transactionController');
 const { protect } = require('../middleware/auth');
 
-// Toutes les routes sont protégées
 router.use(protect);
 
-router
-  .route('/')
+router.route('/')
   .get(getTransactions)
   .post(createTransaction);
 
 router.get('/summary', getSummary);
 
-router
-  .route('/:id')
+router.route('/:id')
   .put(updateTransaction)
   .delete(deleteTransaction);
 

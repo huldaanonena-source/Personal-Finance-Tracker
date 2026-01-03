@@ -16,7 +16,7 @@ const transactionSchema = new mongoose.Schema({
     required: [true, 'La catégorie est requise'],
     enum: [
       'Salary', 'Freelance', 'Investment', 'Other Income',
-      'Food', 'Rent', 'Transport', 'Entertainment',
+      'Food', 'Rent', 'Transport', 'Entertainment', 
       'Health', 'Shopping', 'Bills', 'Other Expense'
     ]
   },
