@@ -31,7 +31,6 @@ const Dashboard = () => {
         axios.get('/transactions'),
         axios.get('/transactions/summary')
       ]);
-      
       setTransactions(transactionsRes.data);
       setSummary(summaryRes.data);
     } catch (error) {
@@ -42,36 +41,21 @@ const Dashboard = () => {
   };
 
   const handleAddTransaction = async (transactionData) => {
-    try {
-      await axios.post('/transactions', transactionData);
-      fetchData();
-      setShowForm(false);
-    } catch (error) {
-      console.error('Erreur lors de l\'ajout', error);
-      alert('Erreur lors de l\'ajout de la transaction');
-    }
+    await axios.post('/transactions', transactionData);
+    fetchData();
+    setShowForm(false);
   };
 
   const handleUpdateTransaction = async (id, transactionData) => {
-    try {
-      await axios.put(`/transactions/${id}`, transactionData);
-      fetchData();
-      setEditingTransaction(null);
-    } catch (error) {
-      console.error('Erreur lors de la modification', error);
-      alert('Erreur lors de la modification');
-    }
+    await axios.put(`/transactions/${id}`, transactionData);
+    fetchData();
+    setEditingTransaction(null);
   };
 
   const handleDeleteTransaction = async (id) => {
     if (window.confirm('Êtes-vous sûr de vouloir supprimer cette transaction ?')) {
-      try {
-        await axios.delete(`/transactions/${id}`);
-        fetchData();
-      } catch (error) {
-        console.error('Erreur lors de la suppression', error);
-        alert('Erreur lors de la suppression');
-      }
+      await axios.delete(`/transactions/${id}`);
+      fetchData();
     }
   };
 
@@ -85,68 +69,43 @@ const Dashboard = () => {
     setEditingTransaction(null);
   };
 
-  if (loading) {
-    return (
-      <div className="loading-container">
-        <div className="spinner"></div>
-        <p>Chargement...</p>
-      </div>
-    );
-  }
+  if (loading) return <p>Chargement...</p>;
 
   return (
     <div className="dashboard">
-      {/* Header */}
       <header className="dashboard-header">
-        <div className="header-content">
-          <h1>💰 Finance Tracker</h1>
-          <div className="user-info">
-            <span>Bonjour, {user?.name}</span>
-            <button onClick={logout} className="btn-logout">
-              Déconnexion
-            </button>
-          </div>
+        <h1>💰 Finance Tracker</h1>
+        <div>
+          <span>Bonjour, {user?.name}</span>
+          <button onClick={logout}>Déconnexion</button>
         </div>
       </header>
 
-      {/* Main Content */}
-      <div className="dashboard-content">
-        {/* Summary Cards */}
-        <Summary summary={summary} />
+      <Summary summary={summary} />
 
-        {/* Add Transaction Button */}
-        <div className="action-bar">
-          <button 
-            onClick={() => setShowForm(!showForm)} 
-            className="btn-add-transaction"
-          >
-            {showForm ? '✕ Fermer' : '+ Nouvelle Transaction'}
-          </button>
-        </div>
+      <button onClick={() => setShowForm(!showForm)}>
+        {showForm ? '✕ Fermer' : '+ Nouvelle Transaction'}
+      </button>
 
-        {/* Transaction Form */}
-        {showForm && (
-          <TransactionForm
-            onSubmit={editingTransaction ? handleUpdateTransaction : handleAddTransaction}
-            onCancel={handleCloseForm}
-            transaction={editingTransaction}
-          />
-        )}
+      {showForm && (
+        <TransactionForm
+          onSubmit={
+            editingTransaction
+              ? (data) => handleUpdateTransaction(editingTransaction._id, data)
+              : handleAddTransaction
+          }
+          onCancel={handleCloseForm}
+          transaction={editingTransaction}
+        />
+      )}
 
-        {/* Chart and Transaction List */}
-        <div className="dashboard-grid">
-          <div className="chart-section">
-            <Chart summary={summary} />
-          </div>
-          
-          <div className="transactions-section">
-            <TransactionList
-              transactions={transactions}
-              onEdit={handleEdit}
-              onDelete={handleDeleteTransaction}
-            />
-          </div>
-        </div>
+      <div className="dashboard-grid">
+        <Chart summary={summary} />
+        <TransactionList
+          transactions={transactions}
+          onEdit={handleEdit}
+          onDelete={handleDeleteTransaction}
+        />
       </div>
     </div>
   );
