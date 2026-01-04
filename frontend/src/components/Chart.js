@@ -1,84 +1,41 @@
 import React from 'react';
+import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import { Pie } from 'react-chartjs-2';
-import {
-  Chart as ChartJS,
-  ArcElement,
-  Tooltip,
-  Legend
-} from 'chart.js';
-import './Chart.css';
 
-// Enregistrer les composants Chart.js
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 const Chart = ({ summary }) => {
-  const expensesByCategory = summary.expensesByCategory || {};
-  
-  const hasData = Object.keys(expensesByCategory).length > 0;
+  const categories = Object.keys(summary.expensesByCategory || {});
+  const amounts = Object.values(summary.expensesByCategory || {});
 
   const data = {
-    labels: Object.keys(expensesByCategory),
+    labels: categories,
     datasets: [
       {
         label: 'Dépenses par catégorie',
-        data: Object.values(expensesByCategory),
+        data: amounts,
         backgroundColor: [
-          '#667eea',
-          '#764ba2',
-          '#f093fb',
-          '#4facfe',
-          '#43e97b',
-          '#fa709a',
-          '#fee140',
-          '#30cfd0'
+          '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF', '#FF9F40', '#C9CBCF'
         ],
-        borderColor: '#fff',
-        borderWidth: 2
-      }
-    ]
+        borderWidth: 1,
+      },
+    ],
   };
 
   const options = {
     responsive: true,
-    maintainAspectRatio: false,
     plugins: {
-      legend: {
-        position: 'bottom',
-        labels: {
-          padding: 15,
-          font: {
-            size: 12
-          }
-        }
-      },
-      tooltip: {
-        callbacks: {
-          label: function(context) {
-            const label = context.label || '';
-            const value = context.parsed || 0;
-            const total = context.dataset.data.reduce((a, b) => a + b, 0);
-            const percentage = ((value / total) * 100).toFixed(1);
-            return `${label}: $${value.toFixed(2)} (${percentage}%)`;
-          }
-        }
-      }
+      legend: { position: 'bottom' },
+      title: { display: true, text: 'Répartition des dépenses' }
     }
   };
 
   return (
-    <div className="chart-container">
-      <h3>Répartition des dépenses</h3>
-      
-      {hasData ? (
-        <div className="chart-wrapper">
-          <Pie data={data} options={options} />
-        </div>
+    <div className="chart-container" style={{ background: 'white', padding: '20px', borderRadius: '12px' }}>
+      {categories.length > 0 ? (
+        <Pie data={data} options={options} />
       ) : (
-        <div className="chart-empty">
-          <p>📊</p>
-          <span>Aucune dépense enregistrée</span>
-          <small>Ajoutez des transactions pour voir la répartition</small>
-        </div>
+        <p style={{ textAlign: 'center', color: '#666' }}>Ajoutez des dépenses pour voir le graphique</p>
       )}
     </div>
   );

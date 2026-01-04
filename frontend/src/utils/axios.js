@@ -1,8 +1,6 @@
 import axios from 'axios';
 
-// Utilise l'URL de production si disponible
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
-
+const API_URL = 'http://localhost:5000/api';
 
 const instance = axios.create({
   baseURL: API_URL,
@@ -11,7 +9,6 @@ const instance = axios.create({
   }
 });
 
-// Ajouter le token à chaque requête
 instance.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('token');
@@ -20,9 +17,7 @@ instance.interceptors.request.use(
     }
     return config;
   },
-  (error) => {
-    return Promise.reject(error);
-  }
+  (error) => Promise.reject(error)
 );
 
 export default instance;
