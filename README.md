@@ -43,3 +43,4 @@ Application web de gestion de finances personnelles permettant de suivre vos rev
 git clone https://github.com/VOTRE-USERNAME/personal-finance-tracker.git
 cd personal-finance-tracker
 >>>>>>> 0768c5e (Ajout du frontend et backend (déploiement complet))
+# finance-tracker-test--copy-
