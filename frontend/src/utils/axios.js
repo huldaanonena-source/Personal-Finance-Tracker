@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'https://finance-tracker-backend-oaaq.onrender.com';
+const API_URL = 'https://finance-tracker-backend-oaaq.onrender.com/api';
 
 const instance = axios.create({
   baseURL: API_URL,
